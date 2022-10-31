@@ -6,7 +6,7 @@
 /*   By: cschuijt <cschuijt@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/30 22:22:21 by cschuijt      #+#    #+#                 */
-/*   Updated: 2022/10/30 23:31:49 by cschuijt      ########   odam.nl         */
+/*   Updated: 2022/10/31 22:22:40 by cschuijt      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 char	*get_next_line(int fd)
 {
 	static char		*cbuf = NULL;
-	static size_t	cpos = 0;
+	static size_t	cpos = (size_t) BUFFER_SIZE;
+	size_t			read_bytes;
 
 	if (!cbuf)
-		cbuf = (char *)malloc(BUFFER_SIZE);
-	// start reading from current pos in current buffer
-	// dump buffer in cbuf every time
-	// join together buffers until we get a complete line or EOF
-	// return that string
+		cbuf = malloc(BUFFER_SIZE);
+	if (cpos == BUFFER_SIZE)
+	{
+		read_bytes = read(fd, cbuf, BUFFER_SIZE);
+		cpos = 0;
+	}
 	return (NULL);
 }
