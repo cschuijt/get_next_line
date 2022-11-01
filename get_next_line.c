@@ -15,7 +15,7 @@
 char	*get_next_line(int fd)
 {
 	static char		*buffer = NULL;
-	static size_t	pos = (size_t) BUFFER_SIZE;
+	static size_t	pos = BUFFER_SIZE;
 	char			*line;
 
 	if (!buffer)
