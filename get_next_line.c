@@ -14,16 +14,26 @@
 
 char	*get_next_line(int fd)
 {
-	static char		*cbuf = NULL;
-	static size_t	cpos = (size_t) BUFFER_SIZE;
-	size_t			read_bytes;
+	static char		*buffer = NULL;
+	static size_t	pos = (size_t) BUFFER_SIZE;
+	char			*line;
 
-	if (!cbuf)
-		cbuf = malloc(BUFFER_SIZE);
-	if (cpos == BUFFER_SIZE)
+	if (!buffer)
+		buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	line = NULL;
+	while (!ends_in_newline(line))
 	{
-		read_bytes = read(fd, cbuf, BUFFER_SIZE);
-		cpos = 0;
+		if (pos >= BUFFER_SIZE || !buffer[pos])
+			if (get_next_buffer(fd, buffer, &pos) <= 0)
+				return (line);
+		pos += add_to_str(&line, buffer[pos], length_until_newline(buffer));
+		if (!line)
+		{
+			free(buffer);
+			return (line);
+		}
 	}
-	return (NULL);
+	return (line);
 }
