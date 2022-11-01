@@ -37,10 +37,13 @@ int	get_next_buffer(int fd, char *buffer, size_t *buffer_pos)
 
 // Returns the amount of characters from buffer to the first newline or to
 // the null terminator. Can be used as a ft_strlen in a pinch :)
+// If a null pointer is given, return value will always be 0.
 int	length_until_newline(char *buffer)
 {
 	int	i;
 
+	if (!buffer)
+		return (0);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
@@ -65,23 +68,18 @@ int	add_to_str(char **old, char *to_add, size_t n)
 	char	*new;
 	int		old_length;
 
-	if (*old == NULL)
-		*old = to_add;
-	else
+	old_length = length_until_newline(*old);
+	new = malloc(n + old_length + 1);
+	if (!new)
 	{
-		old_length = length_until_newline(*old);
-		new = malloc(n + old_length + 1);
-		if (!new)
-		{
-			free(*old);
-			*old = NULL;
-			return (0);
-		}	
-		ft_strcpy(new, *old, old_length);
-		ft_strcpy(new + old_length, to_add, n);
 		free(*old);
-		*old = new;
-	}
+		*old = NULL;
+		return (0);
+	}	
+	ft_strcpy(new, *old, old_length);
+	ft_strcpy(new + old_length, to_add, n);
+	free(*old);
+	*old = new;
 	return ((int) n);
 }
 

@@ -28,7 +28,7 @@ char	*get_next_line(int fd)
 		if (pos >= BUFFER_SIZE || !buffer[pos])
 			if (get_next_buffer(fd, buffer, &pos) <= 0)
 				return (line);
-		pos += add_to_str(&line, buffer[pos], length_until_newline(buffer));
+		pos += add_to_str(&line, &buffer[pos], length_until_newline(&buffer[pos]) + 1);
 		if (!line)
 		{
 			free(buffer);
