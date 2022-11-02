@@ -12,11 +12,13 @@
 
 #include "get_next_line.h"
 
-// Calls read() on fd, putting the result in buffer and null terminating it.
-// Also moves buffer_pos to the start of the to_add buffer, or to the end when
-// EOF/error occurs (to ensure no bad data is read). When EOF or error, buffer
-// is freed, to be potentially reallocated next time get_next_line is called.
-// Return value is the same as the read() call.
+// Calls read() on fd, putting the result in *buffer and null terminating it.
+// Old data may remain beyond the null terminator if return from read() is
+// shorter than the buffer size. If read reaches EOF or errors, buffer_pos
+// is moved to the end of the buffer to avoid illegal reads, else it is
+// set to the start of the buffer. If EOF or error, the buffer pointer is
+// set to NULL and the buffer itself is freed in preparation for a return value.
+// Returns amount of bytes read, the same value as read() returns.
 int	get_next_buffer(int fd, char **buffer, size_t *buffer_pos)
 {
 	int	read_bytes;
@@ -52,8 +54,10 @@ int	length_to_nl(char *buffer)
 	return (i);
 }
 
-// Adds n bytes of string to_add to the back of string old, allocating the
-// resulting string. If old is NULL, the pointer is changed to to_add. If old
+// Adds n bytes of string "to_add" to the back of string "old", allocating the
+// resulting string. If old is NULL, length_to_nl(*old) will also be zero,
+// meaning the function will not copy anything from old and create just a new
+// string with n bytes from to_add and a null terminator. If old
 // already exists, a new null-terminated string is allocated containing both
 // strings, concatenated, the old pointer is overridden and the original
 // old is freed. This way, calling this method should always leave you with at
