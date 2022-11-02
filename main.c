@@ -18,7 +18,7 @@ int	main(int argc, char **argv)
 {
 	int fd;
 	char *str = "";
-	int n = 0;
+	int n = 1;
 
 	if (argc < 2)
 	{
@@ -45,7 +45,7 @@ int	main(int argc, char **argv)
 		}
 		else
 		{
-			printf("Null encountered, wrote %d lines\n", n);
+			printf("Null encountered, wrote %d lines\n", n - 1);
 			break ;
 		}
 	}

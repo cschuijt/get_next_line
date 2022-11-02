@@ -17,20 +17,22 @@
 // EOF/error occurs (to ensure no bad data is read). When EOF or error, buffer
 // is freed, to be potentially reallocated next time get_next_line is called.
 // Return value is the same as the read() call.
-int	get_next_buffer(int fd, char *buffer, size_t *buffer_pos)
+int	get_next_buffer(int fd, char **buffer, size_t *buffer_pos)
 {
 	int	read_bytes;
 
-	read_bytes = read(fd, buffer, BUFFER_SIZE);
+	read_bytes = read(fd, *buffer, BUFFER_SIZE);
 	if (read_bytes <= 0)
-	{
-		free(buffer);
 		*buffer_pos = BUFFER_SIZE;
-	}
 	else
 	{
-		buffer[read_bytes] = '\0';
+		(*buffer)[read_bytes] = '\0';
 		*buffer_pos = 0;
+	}
+	if (read_bytes <= 0)
+	{
+		free(*buffer);
+		*buffer = NULL;
 	}
 	return (read_bytes);
 }
@@ -38,7 +40,7 @@ int	get_next_buffer(int fd, char *buffer, size_t *buffer_pos)
 // Returns the amount of characters from buffer to the first newline or to
 // the null terminator. Can be used as a ft_strlen in a pinch :)
 // If a null pointer is given, return value will always be 0.
-int	length_until_newline(char *buffer)
+int	length_to_nl(char *buffer)
 {
 	int	i;
 
@@ -68,7 +70,7 @@ int	add_to_str(char **old, char *to_add, size_t n)
 	char	*new;
 	int		old_length;
 
-	old_length = length_until_newline(*old);
+	old_length = length_to_nl(*old);
 	new = malloc(n + old_length + 1);
 	if (!new)
 	{
