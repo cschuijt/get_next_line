@@ -18,6 +18,7 @@ int	main(int argc, char **argv)
 {
 	int fd;
 	char *str = "";
+	int n = 0;
 
 	if (argc < 2)
 	{
@@ -38,11 +39,15 @@ int	main(int argc, char **argv)
 		str = get_next_line(fd);
 		if (str)
 		{
-			printf("%s", str);
+			printf("%d: [%s]", n, str);
+			n++;
 			free (str);
 		}
 		else
+		{
+			printf("Null encountered, wrote %d lines\n", n);
 			break ;
+		}
 	}
 	close(fd);
 	return (0);
