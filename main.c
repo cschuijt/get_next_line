@@ -14,18 +14,35 @@
 #include <stdio.h>
 #include <fcntl.h> 
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	int fd = open("test.txt", O_RDONLY);
-	char *str;
+	int fd;
+	char *str = "";
 
-	while (1)
+	if (argc < 2)
+	{
+		printf("No file specified!\n");
+		return (1);
+	}
+
+	fd = open(argv[1], O_RDONLY);
+
+	if (fd < 0)
+	{
+		printf("File opening unsuccessful!\n");
+		return (-2);
+	}
+
+	while (str)
 	{
 		str = get_next_line(fd);
-		printf("%s", str);
-		if (!str)
+		if (str)
+		{
+			printf("%s", str);
+			free (str);
+		}
+		else
 			break ;
-		free(str);
 	}
 	close(fd);
 	return (0);
