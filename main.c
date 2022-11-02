@@ -14,6 +14,11 @@
 #include <stdio.h>
 #include <fcntl.h> 
 
+void haha(void)
+{
+	system("leaks a.out");
+}
+
 int	main(int argc, char **argv)
 {
 	int fd;
@@ -50,5 +55,6 @@ int	main(int argc, char **argv)
 		}
 	}
 	close(fd);
+	atexit(haha);
 	return (0);
 }
