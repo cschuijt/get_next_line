@@ -16,10 +16,15 @@
 // Old data may remain beyond the null terminator if return from read() is
 // shorter than the buffer size. If read reaches EOF or errors, buffer_pos
 // is moved to the end of the buffer to avoid illegal reads, else it is
-// set to the start of the buffer. If EOF or error, the buffer pointer is
-// set to NULL and the buffer itself is freed in preparation for a return value.
+// set to the start of the buffer.
+//
+// Freeing, if necessary, is handled in this function. If the return value is
+// 0, only the buffer is freed, since we are done reading the file but the line
+// still needs returning. If it's <0, line is also freed to be able to return
+// NULL on error.
+//
 // Returns amount of bytes read, the same value as read() returns.
-int	get_next_buffer(int fd, char **buffer, size_t *buffer_pos)
+int	get_next_buffer(int fd, char **buffer, size_t *buffer_pos, char **line)
 {
 	int	read_bytes;
 
@@ -30,6 +35,11 @@ int	get_next_buffer(int fd, char **buffer, size_t *buffer_pos)
 	{
 		(*buffer)[read_bytes] = '\0';
 		*buffer_pos = 0;
+	}
+	if (read_bytes < 0)
+	{
+		free(*line);
+		*line = NULL;
 	}
 	if (read_bytes <= 0)
 	{

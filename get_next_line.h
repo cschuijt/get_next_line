@@ -25,7 +25,7 @@
 
 char	*get_next_line(int fd);
 
-int		get_next_buffer(int fd, char **buffer, size_t *buffer_pos);
+int		get_next_buffer(int fd, char **buffer, size_t *buffer_pos, char **line);
 int		add_to_str(char **old, char *to_add, size_t n);
 void	ft_strcpy(char *dst, char *src, size_t n);
 int		length_to_nl(char *buffer);

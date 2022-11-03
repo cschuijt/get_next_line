@@ -50,7 +50,7 @@ char	*get_next_line(int fd)
 	while (!ends_in_newline(line))
 	{
 		if (pos >= BUFFER_SIZE || !buffer[pos] || !buffer[pos - 1])
-			if (get_next_buffer(fd, &buffer, &pos) <= 0)
+			if (get_next_buffer(fd, &buffer, &pos, &line) <= 0)
 				break ;
 		pos += add_to_str(&line, &buffer[pos], length_to_nl(&buffer[pos]) + 1);
 		if (!line)
