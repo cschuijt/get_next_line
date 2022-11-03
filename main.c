@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <fcntl.h> 
 
-void haha(void)
+void	haha(void)
 {
 	system("leaks a.out");
 }
@@ -25,13 +25,10 @@ int	main(int argc, char **argv)
 	char *str = "";
 	int n = 1;
 
-	if (argc < 2)
-	{
-		printf("No file specified!\n");
-		return (1);
-	}
-
-	fd = open(argv[1], O_RDONLY);
+	if (argc == 2)
+		fd = open(argv[1], O_RDONLY);
+	else
+		fd = 0;
 
 	if (fd < 0)
 	{
